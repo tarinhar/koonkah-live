@@ -1,0 +1,31 @@
+{% extends 'base/main.html' %} {% load static %} {% block content %}
+
+<div class="container" style="width: 960px">
+  <div class="container pt-5 mb-5">
+    <p class="fs-4">ผลลัพธ์การค้นหา: <a href="">{{ text }}</a></p>
+    <small class="fs-5">พบ {{ item_count }} รายการ</small>
+  </div>
+
+  {% for item in items %}
+  <div class="list-group rounded mb-2 bg-light">
+    <a
+      href="{% url 'item-detail' item.id %}"
+      class="list-group-item list-group-item-action"
+    >
+      <div class="d-md-flex d-block w-100 justify-content-between">
+        <h5 class="mb-1 fw-bold text-primary ps-2">{{ item.name|title }}</h5>
+        <small class="ps-4">{{ item.category.name_th }}</small>
+      </div>
+      <!-- <p class="mb-1">{{ item.description }}</p> -->
+
+      {% if item.description %}
+      <p class="mb-1 ps-4">{{ item.description }}</p>
+      {% endif %}
+
+      <small class="ps-4">{{ item.created|timesince }}</small>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

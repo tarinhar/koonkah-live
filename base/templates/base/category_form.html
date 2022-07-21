@@ -1,0 +1,25 @@
+{% extends 'base/main.html' %} {% load crispy_forms_tags %} {% block content %}
+<section class="bg-light"></section>
+<div class="container py-5 pb-3 text-center">
+  <h1>Category Form</h1>
+</div>
+<div class="container p-4">
+  <form class="row g-3" action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="col-12">{{ form | crispy }}</div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button
+        href="{{ request.META.HTTP_REFERER }}"
+        class="btn btn-outline-secondary me-md-2"
+      >
+        Cancel
+      </button>
+      <button type="submit" value="Submit" class="btn btn-secondary">
+        Save
+      </button>
+    </div>
+  </form>
+</div>
+
+{% endblock%}

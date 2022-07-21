@@ -1,0 +1,285 @@
+{% extends 'base/main.html' %} {% load static %} {% block content %}
+<header class="">
+  <div class="container-lg pt-4">
+    <div class="row">
+      <div class="col-md-6 text-center">
+        <div class="p-3">
+          <img
+            class="border border-1 shadow rounded-circle"
+            src="{{ user.avatar.url }}"
+            alt="user-profile"
+            style="width: 200px; height: auto"
+          />
+        </div>
+        <div class="mb-4 pt-3">
+          <h3 class="fw-bold text-dark">
+            {{ user.first_name | title }} {{user.last_name | title }}
+          </h3>
+          <!-- <h6 class="">@{{ request.user.username }}</h6> -->
+          <h5 class="fw-bold text-success"><i class="fa-solid fa-leaf me-2"></i>แต้ม: {% if items %}{{ total_score}}{% else %}-{% endif %}</h5>
+
+        </div>
+      </div>
+      <div class="col-md-6 bg-light px-4">
+        <div class="py-3 d-flex justify-content-between">
+          <h4 class="fw-bold"><i class="fa-solid fa-user me-2 fs-5"></i>Bio</h4>
+          <div class="">
+            <a
+              href=""
+              class="btn btn-sm btn-outline-secondary rounded-pill align-items-end"
+              role="button"
+              ><i class="fa-solid fa-user-pen me-1"></i>แก้ไข</a
+            >
+          </div>
+        </div>
+        <div class="">
+          <!-- <div class="row">
+            <div class="col-4">
+              <p class="fw-bold">ชื่อ-นามสกุล:</p>
+            </div>
+            <div class="col-8">
+              <p>{{ user.first_name | title }} {{ user.last_name | title }}</p>
+            </div>
+          </div> -->
+          <div class="row">
+            <div class="col-4">
+              <p class="fw-bold">รหัสพนักงาน:</p>
+            </div>
+            <div class="col-8">
+              <p>{{ user.employee_id }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <p class="fw-bold">ชื่อผู้ใช้:</p>
+            </div>
+            <div class="col-8">
+              <p>@{{ user.username }}</p>
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-4">
+              <p class="fw-bold">อีเมล:</p>
+            </div>
+            <div class="col-8">
+              <p>{{ user.email }}</p>
+            </div>
+          </div> -->
+          <!-- <div class="row">
+            <div class="col-4">
+              <p class="fw-bold">Is staff:</p>
+            </div>
+            <div class="col-8">
+              <p>{{ user.is_staff }}</p>
+            </div>
+          </div> -->
+          <!-- <div class="row">
+            <div class="col-4">
+              <p class="fw-bold">Date Joined:</p>
+            </div>
+            <div class="col-8">
+              <p>{{ user.date_joined }}</p>
+            </div>
+          </div> -->
+          <!-- <div class="row">
+            <div class="col-4">
+              <p class="fw-bold">ใช้งานครั้งล่าสุดเมื่อ:</p>
+            </div>
+            <div class="col-8">
+              <p>{{ user.last_login | timesince }}</p>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="container px-3 pt-5 mb-5">
+    <div>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link tablinks active" aria-current="page" href="#" onclick="openTab(event, 'my-item')">วัสดุของฉัน</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link tablinks" href="#" onclick="openTab(event, 'my-reuse')">Reuse ของฉัน</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link tablinks" href="#" onclick="openCity(event, 'Paris')">My Pending</a>
+            </li> -->
+          </ul>
+    </div>
+    <div id="my-item" class="tabcontent">
+  <div class="ps-3 pt-4">
+    <h3 class="fw-bold">รายการวัสดุของ {% if not user.first_name %}{{ user.username | title }}{% else %}{{ user.first_name | title }}{% endif %}</h3>
+  </div>
+
+  {% if items %}
+
+  <div class="container text-end pt-4 pb-2">
+    <div class="d-md-block d-none">
+      <a
+        href="{% url 'item-create' %}"
+        class="btn btn-sm btn-dark rounded-pill px-3"
+        role="button"
+        ><i class="fa-solid fa-plus me-1"></i> เพิ่มใหม่</a
+      >
+    </div>
+    <div class="d-block d-md-none">
+        <a href="{% url 'item-create' %}" class="" role="button"
+          ><i class="fa-solid fa-circle-plus text-dark fs-1"></i
+        ></a>
+      </div>
+  </div>
+
+
+    <div class="container p-3">
+      <div class="row pb-5 mb-4 g-4">
+  
+        {% for item in items %}
+        <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+          <!-- Card-->
+          <div class="card rounded shadow-sm bg-gradient border-1 text-md-center">
+            <div class="card-body">
+              <div class="container-fluid rounded text-center">
+                <a href="{% url 'item-detail' item.id %}"><img
+                  src="{% if item.image.url is not None %}{{ item.image.url }}{% else %}{{ item.category.image.url }}{% endif %}"
+                  alt=""
+                  class="img-fluid"
+                  style="height: 200px; width: auto"
+                /></a>
+              </div>
+              <h5><a href="{% url 'item-detail' item.id %}" class="card-title text-dark text-decoration-none fw-bold">{{ item.name|title }}</a></h5>
+              <h6 class="card-subtitle text-muted mb-2 font-italic">
+                {{ item.category.name_th }}
+              </h6>
+              <!-- <ul class="list-inline small text-end mb-3">
+                <li class="list-inline-item m-0">
+                  <span class="badge rounded-pill bg-secondary me-2">{{ item.category|title }}</span>
+                </li>
+                <li class="list-inline-item m-0">
+                  <i class="fa-solid fa-heart text-danger"></i><span class="text-muted"> 1k</span>
+                </li>
+              </ul> -->
+              <div class="d-flex justify-content-center gap-2 pt-2">
+                  <a href="{% url 'item-reuse' item.id %}" role="button" class="btn btn-outline-success rounded-pill px-4 fw-bold"><i class="fa-solid fa-recycle pe-1"></i> Reuse</a>
+                  <a href="{% url 'item-detail' item.id %}" role="button" class="btn btn-outline-secondary rounded-pill px-2"><i class="fa-solid fa-magnifying-glass"></i></a>
+              </div>
+              <!-- <div class="d-md-flex d-grid justify-content-md-center gap-2">
+                  <a href="" role="button" class="btn btn-sm btn-success text-light rounded-pill border-0 px-2"><i class="fa-solid fa-recycle text-light"></i> Reuse</a>
+                  <a href="{% url 'item-detail' item.id %}" role="button" class="btn btn-sm btn-dark rounded-pill text-light px-2"><i class="fa-solid fa-magnifying-glass text-light"></i></a>
+              </div> -->
+            </div>
+            <div class="card-footer text-center">
+              <small>{{ item.created|timesince }}</small>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        </div>  
+      </div>
+
+  {% else %}
+
+  <div class="mx-auto text-center align-items-center text-secondary py-5">
+    <div class="container">
+      <h4 class="">ยังไม่มีรายการวัสดุของคุณ</h4>
+    </div>
+  </div>
+
+  {% endif %}
+</div>
+
+
+<div id="my-reuse" class="tabcontent" style="display: none">
+  <div class="ps-3 pt-4">
+    <h3 class="fw-bold">รายการ Reuse ของ {% if not user.first_name %}{{ user.username | title }}{% else %}{{ user.first_name | title }}{% endif %}</h3>
+  </div>
+
+  {% if reuses %}
+
+  <div class="container text-end pt-4 pb-2">
+    <div class="d-md-block d-none">
+      <a
+        href="{% url 'item' %}"
+        class="btn btn-sm btn-dark rounded-pill px-3"
+        role="button"
+        ><i class="fa-solid fa-circle-plus me-1"></i> เพิ่ม Reuse</a
+      >
+    </div>
+    <div class="d-block d-md-none">
+        <a href="{% url 'item' %}" class="" role="button"
+          ><i class="fa-solid fa-circle-plus text-dark fs-1"></i
+        ></a>
+      </div>
+  </div>
+
+
+    <div class="container p-3">
+      <div class="row pb-5 mb-4 g-4">
+  
+        {% for reuse in reuses %}
+        <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+          <!-- Card-->
+          <div class="card rounded shadow-sm bg-gradient border-1 text-md-center">
+            <div class="card-body">
+              <div class="container-fluid rounded text-center">
+                <a href="{% url 'item-detail' reuse.item.id %}"><img
+                  src="{% if reuse.item.image.url is not None %}{{ reuse.item.image.url }}{% else %}{{ reuse.item.category.image.url }}{% endif %}"
+                  alt=""
+                  class="img-fluid"
+                  style="height: 200px; width: auto"
+                /></a>
+              </div>
+              <h5><a href="{% url 'item-detail' reuse.item.id %}" class="card-title text-dark text-decoration-none fw-bold">{{ reuse.item.name|title }}</a></h5>
+              <h6 class="card-subtitle text-muted mb-2 font-italic">
+                {{ reuse.item.category.name_th }}
+              </h6>
+              <div class="d-flex justify-content-center align-items-center gap-2 pt-2">
+                <a href="" class="text-decoration-none text-success fst-italic px-2 fw-bold"></i>REUSED</a>
+                <!-- <a href="" class="text-decoration-none text-muted fst-italic px-2 fw-bold"></i>{{ reuse.get_status_display | upper }}</a> -->
+                  <a href="{% url 'item-detail' reuse.item.id %}" role="button" class="btn btn-outline-secondary rounded-pill px-2"><i class="fa-solid fa-magnifying-glass"></i></a>
+              </div>
+            </div>
+            <div class="card-footer text-center">
+              <small>{{ reuse.created|timesince }}</small>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        </div>  
+      </div>
+
+  {% else %}
+
+  <div class="mx-auto text-center align-items-center text-secondary py-5">
+    <div class="container">
+      <h4 class="">ยังไม่มีรายการใช้ซ้ำ (Reuse) ของคุณ</h4>
+    </div>
+  </div>
+
+  {% endif %}
+</div>
+
+</div>
+</section>
+<script>
+function openTab(evt, tabName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+  event.preventDefault();
+}
+
+</script>
+
+{% endblock %}

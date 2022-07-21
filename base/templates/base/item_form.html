@@ -1,0 +1,214 @@
+{% extends 'base/main.html' %} {% block content %} {% load static %}
+
+<section class="bg-light pb-3">
+  <div class="container text-start pt-5 px-4">
+    <h2>ลงทะเบียนวัสดุ</h2>
+  </div>
+
+  <div class="container p-4">
+    <form class="row g-3" action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="col-12">
+        <label for="name" class="form-label">ชื่อวัสดุ</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          {% if item.name %}
+          value="{{ item.name }}"
+          {% endif %}
+          placeholder="ระบุชื่อวัสดุ" required
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="category" class="form-label">หมวดหมู่</label>
+        <select id="category" name="category" class="form-select" value="{{item.category}}" required>
+          {% if not item.category %}
+          <option disabled value="NULL" selected>กรุณาเลือกหมวดหมู่ ...</option>
+          {% endif %}
+            {% for category in categories %}
+          <option value="{{ category.name }}" {% if category.name == item.category.name %} selected {% endif %}>{{ category.name_th }}</option>
+            {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label for="station" class="form-label">สถานที่จัดเก็บ</label>
+        <select id="station" name="station" class="form-select" value="{{item.station}}" required>
+          {% if not item.station %}
+          <option disabled selected>กรุณาเลือกสถานที่จัดเก็บ ...</option>
+          {% endif %}
+            {% for station in stations %}
+          <option value="{{ station.name }}" {% if station.name == item.station.name %} selected {% endif %}>{{ station.name|title }}</option>
+            {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label for="quantity" class="form-label">จำนวน</label>
+        <input
+          type="number"
+          class="form-control"
+          id="quantity"
+          name="quantity"
+          {% if item.quantity %}
+          value="{{ item.quantity }}"
+          {% endif %}
+          placeholder="ระบุจำนวน (รายการ)"
+          min="1"
+          max="10"
+          required
+        />
+      </div>
+      <div class="col-md-3">
+        <label for="weight" class="form-label"
+          >น้ำหนัก<span class="text-muted"></span>
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="weight"
+          name="weight"
+          {% if item.weight %}
+          value="{{ item.weight }}"
+          {% endif %}
+          placeholder="ระบุน้ำหนัก (กิโลกรัม)"
+          min="0"
+          step="0.1" required
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="size" class="form-label"
+          >ขนาด <span class="text-muted">(ถ้ามี)</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="size"
+          name="size"
+          {% if item.size %}
+          value="{{ item.size }}"
+          {% endif %}
+          placeholder="ระบุขนาด (มม./ซม./ม.)"
+        />
+      </div>
+
+      <div class="col-12">
+        <label for="id_image" class="form-label">อัพโหลดรูปถ่าย</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            type="file"
+            id="image"
+            name="image"
+            {% if item.image %}
+            value="{{ item.image.url }}"
+            {% endif %}
+            onchange="preview()"
+            aria-label="Image upload with two button addons"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="btn-img-preview"
+            onclick="toggleImage()"
+          >
+            <i class="fa-solid fa-eye"></i>
+          </button>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="btn-img-hidden"
+            style="display: none"
+            onclick="toggleImage()"
+          >
+            <i class="fa-solid fa-eye-slash"></i>
+          </button>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="image-upload-remove"
+            onclick="clearImage()"
+          >
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+        {% if item.image %}
+
+        <a href="{{ item.image.url }}" class="text-primary text-decoration-none fst-italic">{{ item.image.name }}</a>
+        
+        {% endif %}
+      </div>
+      <div class="col-12">
+        <div class="d-grid justify-content-center">
+          <img
+            id="frame"
+            src="{% if form.instance.image %}{{ item.image.url }}{% elif item.image %}{{ item.image.url }}{% endif %}"
+            class="img-thumbnail"
+            style="display: none; height: 200px; width: auto"
+          />
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-floating">
+          <textarea
+            class="form-control"
+            placeholder="Description"
+            id="description"
+            name="description"
+            style="height: 100px"
+          >{% if item.description %}{{ item.description }}{% endif %}</textarea>
+          <label for="description" class="form-label">รายละเอียดเพิ่มเติม (ถ้ามี)</label>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="reusable"
+            name="reusable"
+            value="reusable"
+            required
+          />
+          <label class="form-check-label" for="reusable"> วัสดุสามารถนำกลับมาใช้ซ้ำได้ ?</label>
+          <p><a href="{% static 'images/steel-standard-dimension.png' %}" class="text-info py-2" target="_blank"><i class="fa-solid fa-file-lines me-2"></i>มาตรฐานวัสดุน้ำกลับมาใช้งานใหมา่ในงาน Kaizen</a></p>
+        </div>
+      </div>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-outline-secondary me-md-2" role="button">Cancel</a>
+        <button type="submit" value="Submit" class="btn btn-secondary">Save</button>
+      </div>
+    </form>
+  </div>
+</section>
+<script>
+  function preview() {
+    frame.src = URL.createObjectURL(event.target.files[0]);
+  }
+  function clearImage() {
+    document.getElementById("image").value = null;
+    frame.src = "";
+  }
+
+  function toggleImage() {
+    var img_preview = document.getElementById("frame");
+    var btn_img_preview = document.getElementById("btn-img-preview");
+    var btn_img_hidden = document.getElementById("btn-img-hidden");
+    if (img_preview.style.display === "none") {
+      img_preview.style.display = "block";
+      btn_img_preview.style.display = "none";
+      btn_img_hidden.style.display = "block";
+    } else {
+      img_preview.style.display = "none";
+      btn_img_hidden.style.display = "none";
+      btn_img_preview.style.display = "block";
+    }
+  }
+
+</script>
+{% endblock %}

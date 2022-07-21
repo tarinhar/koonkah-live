@@ -1,0 +1,157 @@
+{% extends 'base/main.html' %} {% load static %} {% block content %}
+
+<section class="w-100 p-4 d-flex justify-content-center text-center mb-5">
+  <div class="container py-4">
+    <div class="row g-0 align-items-center">
+      <div class="col-lg-6 mb-5 mb-lg-0 mx-auto">
+        <div class="card">
+          <div class="card-body py-5 px-4 shadow-5 text-center">
+            <h2 class="fw-bold mb-5">สร้างบัญชี KoonKah</h2>
+            <form action="" method="POST">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input
+                      type="text"
+                      id="floatingFirstName"
+                      name="first_name"
+                      class="form-control"
+                      placeholder="First Name"
+                      required
+                    />
+                    <label class="form-label" for="floatingFirstName"
+                      >ชื่อ</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input
+                      type="text"
+                      id="floatingLastName"
+                      name="last_name"
+                      class="form-control"
+                      placeholder="Last Name"
+                      required
+                    />
+                    <label class="form-label" for="floatingLastName"
+                      >นามสกุล</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input
+                      type="text"
+                      id="floatingUsername"
+                      class="form-control"
+                      name="username"
+                      placeholder="Username"
+                      required
+                    />
+                    <label class="form-label" for="floatingUsername"
+                      >ชื่อผู้ใช้</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input
+                      type="text"
+                      id="floatingEmployeeId"
+                      class="form-control"
+                      name="employee_id"
+                      placeholder="Employee ID"
+                      required
+                    />
+                    <label class="form-label" for="floatingEmployeeId"
+                      >รหัสพนักงาน</label
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-floating mb-4">
+                <input
+                  type="email"
+                  id="floatingEmail"
+                  class="form-control"
+                  name="email"
+                  placeholder="name@example.com"
+                />
+                <label class="form-label" for="floatingEmail">อีเมล</label>
+              </div>
+
+              <div class="form-floating mb-4">
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  name="password"
+                  placeholder="Password"
+                  onchange="validatePassword()"
+                />
+                <label class="form-label" for="floatingPassword"
+                  >รหัสผ่าน</label
+                >
+              </div>
+
+              <div class="form-floating mb-4">
+                <input
+                  type="password"
+                  id="password2"
+                  class="form-control"
+                  name="password2"
+                  placeholder="Confirm Password"
+                  onkeyup="validatePassword()"
+                />
+                <label class="form-label" for="floatingPassword2">ยืนยัน</label>
+              </div>
+
+              <div class="form-check d-flex justify-content-center mb-4">
+                <input
+                  class="form-check-input me-2"
+                  type="checkbox"
+                  value=""
+                  id="agree"
+                  checked=""
+                />
+                <label class="form-check-label" for="agree">
+                  ข้าพเจ้ายอมรับ
+                  <span class="fw-bold">ข้อกำหนดและเงื่อนไขในการใช้งาน</span>
+                </label>
+              </div>
+
+              <!-- Submit button -->
+              <button type="submit" class="btn btn-dark btn-block mb-4 w-25">
+                Sign up
+              </button>
+            </form>
+            <div class="text-center">
+              <p>
+                คุณมีบัญชีอยู่แล้ว?
+                <a href="{% url 'login' %}">ลงชื่อเข้าใช้!</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  var password1 = document.getElementById("password");
+  var password2 = document.getElementById("password2");
+
+  function validatePassword() {
+    if (password1.value != password2.value) {
+      password2.setCustomValidity("Passwords Don't Match");
+    } else {
+      password2.setCustomValidity("");
+    }
+  }
+</script>
+{% endblock %}

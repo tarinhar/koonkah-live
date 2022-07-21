@@ -1,0 +1,64 @@
+{% load static %}
+<div class="container p-3">
+  <div class="row pb-5 mb-4 g-4">
+    {% for item in items %}
+    <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+      <!-- Card-->
+      <div
+        class="card shadow-sm bg-gradient border border-1 rounded-3 text-md-center"
+      >
+        <div class="card-body">
+          <div class="container-fluid rounded text-center">
+            <a href="{% url 'item-detail' item.id %}"
+              ><img
+                src="{% if item.image.url is not None %}{{ item.image.url }}{% else %}{{ item.category.image.url }}{% endif %}"
+                alt="Item Image"
+                class="img-fluid"
+                style="height: 200px; width: auto"
+            /></a>
+          </div>
+          <h5>
+            <a
+              href="{% url 'item-detail' item.id %}"
+              class="card-title text-dark text-decoration-none fw-bold"
+              >{{ item.name|title }}</a
+            >
+          </h5>
+          <h6 class="card-subtitle text-muted mb-2 font-italic">
+            {{ item.category.name_th }}
+          </h6>
+          <!-- <ul class="list-inline small text-end mb-3">
+              <li class="list-inline-item m-0">
+                <span class="badge rounded-pill bg-secondary me-2">{{ item.category|title }}</span>
+              </li>
+              <li class="list-inline-item m-0">
+                <i class="fa-solid fa-heart text-danger"></i><span class="text-muted"> 1k</span>
+              </li>
+            </ul> -->
+          <div class="d-flex justify-content-center gap-2 pt-2">
+            <a
+              href="{% url 'item-reuse' item.id %}"
+              role="button"
+              class="btn btn-outline-success rounded-pill px-4 fw-bold"
+              ><i class="fa-solid fa-recycle pe-1"></i> Reuse</a
+            >
+            <a
+              href="{% url 'item-detail' item.id %}"
+              role="button"
+              class="btn btn-outline-secondary rounded-pill px-2"
+              ><i class="fa-solid fa-magnifying-glass"></i
+            ></a>
+          </div>
+          <!-- <div class="d-md-flex d-grid justify-content-md-center gap-2">
+                <a href="" role="button" class="btn btn-sm btn-success text-light rounded-pill border-0 px-2"><i class="fa-solid fa-recycle text-light"></i> Reuse</a>
+                <a href="{% url 'item-detail' item.id %}" role="button" class="btn btn-sm btn-dark rounded-pill text-light px-2"><i class="fa-solid fa-magnifying-glass text-light"></i></a>
+            </div> -->
+        </div>
+        <div class="card-footer text-center">
+          <small>{{ item.created|timesince }}</small>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>

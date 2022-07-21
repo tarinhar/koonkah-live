@@ -1,0 +1,186 @@
+{% extends 'base/main.html' %} {% block content %}
+
+<div class="container py-5 vh-100">
+  <div class="row align-items-center">
+    <div class="col-md-6 mb-3 text-center">
+      <img
+        class="img-fluid"
+        src="{{ item.image.url }}"
+        alt=""
+        style="height: 300px; width: auto"
+      />
+    </div>
+    <div
+      class="col-md-6 border border-1 rounded-3 bg-light bg-gradient shadow-sm pt-3"
+    >
+      <div class="container">
+        <div class="row">
+          <div class="col mb-2 text-end">
+            <a
+              href="{% url 'item-update' item.id %}"
+              class="btn btn-sm btn-outline-secondary rounded-circle"
+              role="button"
+              ><i class="fa-solid fa-pen-to-square"></i
+            ></a>
+            <!-- <a href="{% url 'item-delete' item.id %}" class="btn btn-sm btn-outline-danger rounded-circle" role="button"><i class="fa-solid fa-trash-can"></i></a> -->
+            <a
+              href=""
+              class="btn btn-sm btn-outline-danger rounded-circle"
+              role="button"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              ><i class="fa-solid fa-trash-can"></i
+            ></a>
+            <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Launch demo modal</button> -->
+          </div>
+          <div class="row mb-2">
+            <div class="col-12">
+              <nav
+                style="
+                  --bs-breadcrumb-divider: url(
+                    &#34;data:image/svg + xml,
+                    %3Csvgxmlns='http://www.w3.org/2000/svg'width='8'height='8'%3E%3Cpathd='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z'fill='currentColor'/%3E%3C/svg%3E&#34;
+                  );
+                "
+                aria-label="breadcrumb"
+              >
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a
+                      href="{% url 'home' %}"
+                      class="text-decoration-none text-dark"
+                      >หน้าแรก</a
+                    >
+                  </li>
+                  <li class="breadcrumb-item">
+                    <a
+                      href="{% url 'category' %}"
+                      class="text-decoration-none text-dark"
+                      >หมวดหมู่</a
+                    >
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    {{ item.category.name_th }}
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-12">
+              <h3 class="fw-bold">{{ item.name|title }}</h3>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-4">
+              <span class="badge rounded-pill bg-secondary me-2"
+                >{{ item.category.name_th }}</span
+              >
+            </div>
+            <div class="col-8">
+              <small
+                >สร้างโดย:
+                <span class="text-primary"
+                  ><a href="{% url 'user-profile' item.owner.id %}" class=""
+                    >@{{ item.owner }}</a
+                  ></span
+                >, อัพเดทล่าสุด: {{ item.updated | timesince }}</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-12"><h5>รายละเอียด</h5></div>
+          <div class="col-12">{{ item.description }}</div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-4 fw-bold">จำนวน:</div>
+          <div class="col">{{ item.quantity }} รายการ</div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-4 fw-bold">ขนาด:</div>
+          {% if item.size %}
+          <div class="col">{{ item.size}}</div>
+          {% else %}
+          <div class="col text-muted">N/A</div>
+          {% endif %}
+        </div>
+        <div class="row mb-4">
+          <div class="col-4 fw-bold">น้ำหนัก:</div>
+          <div class="col">{{ item.weight}} กิโลกรัม</div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-4 fw-bold">สถานะ:</div>
+          {% if item_reuse is None %}
+          <div class="col text-success fw-bold">พร้อมใช้งาน</div>
+          {% else %}
+          <!-- <div class="col">Reused by @{{ item_reuse.user }}<span class="text-primary fst-italic ms-2 fw-bold">{{ item_reuse.get_status_display | upper }}</span></div> -->
+          <div class="col">
+            นำไปใช้โดย @{{ item_reuse.user }}<span
+              class="text-primary text-success fst-italic ms-2 fw-bold"
+              >REUSED</span
+            >
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="text-center mb-3 mt-5">
+        <a
+          href="{% url 'item-reuse' item.id %}"
+          class="btn btn btn-success rounded-pill px-4"
+          role="button"
+          ><i class="fa-solid fa-recycle text-light me-2"></i>REUSE</a
+        >
+        <!-- <button type="submit" class="btn btn-success rounded-pill px-5" value="Submit"><i class="fa-solid fa-recycle text-light"></i> REUSE</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Launch demo modal</button> -->
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          <i class="fa-solid fa-trash-can me-2"></i>Delete Confirmation
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>คูณต้องการลบรายการ {{ item.name|title }} ใช่ไหรือไม่?</p>
+      </div>
+      <div class="modal-footer">
+        <form action="{% url 'item-delete' item.id %}" method="POST">
+          {% csrf_token %}
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-danger" value="Confirm">
+            Delete!
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
